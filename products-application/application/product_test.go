@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/jefersonvinicius/fullcycle-course-hexagonal-architecture/products-application/application"
+	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/require"
 )
 
@@ -35,4 +36,24 @@ func TestProduct_Disable(t *testing.T) {
 
 	err = product.Disable()
 	require.Equal(t, "the price must be zero in order to have the product disabled", err.Error())
+}
+
+func TestProduct_IsValid(t *testing.T) {
+	product := application.Product{}
+	product.ID = uuid.NewV4().String()
+	product.Name = "Controle"
+	product.Status = application.DISABLED
+	product.Price = 10
+
+	_, err := product.IsValid()
+	require.Nil(t, err)
+
+	product.Status = "INVALID"
+	_, err = product.IsValid()
+	require.Equal(t, "the status must be enabled or disabled", err.Error())
+
+	product.Status = application.ENABLED
+	product.Price = -10
+	_, err = product.IsValid()
+	require.Equal(t, "the price must be greater or equal zero", err.Error())
 }

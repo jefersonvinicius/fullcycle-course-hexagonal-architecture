@@ -5,6 +5,9 @@ github.com/asaskevich/govalidator
 github.com/davecgh/go-spew/spew
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
+# github.com/satori/go.uuid v1.2.0
+## explicit
+github.com/satori/go.uuid
 # github.com/stretchr/testify v1.7.0
 ## explicit
 github.com/stretchr/testify/assert
