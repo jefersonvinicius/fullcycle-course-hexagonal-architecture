@@ -6,6 +6,9 @@ github.com/davecgh/go-spew/spew
 # github.com/golang/mock v1.5.0
 ## explicit
 github.com/golang/mock/gomock
+# github.com/mattn/go-sqlite3 v1.14.7
+## explicit
+github.com/mattn/go-sqlite3
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
 # github.com/satori/go.uuid v1.2.0
