@@ -61,3 +61,35 @@ func TestProductDb_Get(t *testing.T) {
 	require.Equal(t, 10.0, product.GetPrice())
 	require.Equal(t, application.DISABLED, product.GetStatus())
 }
+
+func TestProductDb_Save(t *testing.T) {
+	setUp()
+
+	defer Db.Close()
+
+	product := application.NewProduct()
+	product.Name = "Control"
+	product.Price = 20
+
+	productDb := db.NewProductDB(Db)
+	result, err := productDb.Save(product)
+	require.Nil(t, err)
+	require.Equal(t, "Control", result.GetName())
+	require.Equal(t, 20.0, result.GetPrice())
+	require.Equal(t, 1, getAmountProductOnDatabase())
+
+}
+
+func getAmountProductOnDatabase() int {
+	stmt, err := Db.Prepare("select count(*) as count from products")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	result, err := stmt.Query()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	var count int
+	result.Scan(&count)
+	return count
+}

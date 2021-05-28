@@ -2,6 +2,8 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
+	"log"
 
 	"github.com/jefersonvinicius/fullcycle-course-hexagonal-architecture/products-application/application"
 	_ "github.com/mattn/go-sqlite3"
@@ -30,6 +32,47 @@ func (p *ProductDB) Get(id string) (application.ProductInterface, error) {
 	return &product, nil
 }
 
-// type ProductWriter interface {
-// 	Save(product ProductInterface) (ProductInterface, error)
-// }
+func (p *ProductDB) Save(product application.ProductInterface) (application.ProductInterface, error) {
+
+	if productAlreadyExists(product.GetID(), p) {
+		stmt, err := p.db.Prepare("update products set name = ?, price = ?, status = ? where id = ?")
+		if err != nil {
+			return nil, err
+		}
+
+		_, err = stmt.Exec(product.GetName(), product.GetPrice(), product.GetStatus(), product.GetID())
+		if err != nil {
+			return nil, err
+		}
+
+		return product, nil
+
+	} else {
+		stmt, err := p.db.Prepare("insert into products values(?, ?, ?, ?)")
+		if err != nil {
+			return nil, err
+		}
+
+		_, err = stmt.Exec(product.GetName(), product.GetPrice(), product.GetStatus(), product.GetID())
+		if err != nil {
+			return nil, err
+		}
+
+		return product, nil
+	}
+}
+
+func productAlreadyExists(id string, p *ProductDB) bool {
+	stmt, err := p.db.Prepare("select * from products where id = ?")
+	checkError(err)
+	rows, err := stmt.Query(id)
+	checkError(err)
+	fmt.Println(rows.Next())
+	return false
+}
+
+func checkError(err error) {
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+}
