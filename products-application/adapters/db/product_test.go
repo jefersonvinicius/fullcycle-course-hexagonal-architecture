@@ -73,11 +73,22 @@ func TestProductDb_Save(t *testing.T) {
 
 	productDb := db.NewProductDB(Db)
 	result, err := productDb.Save(product)
+
 	require.Nil(t, err)
 	require.Equal(t, "Control", result.GetName())
 	require.Equal(t, 20.0, result.GetPrice())
-	require.Equal(t, 1, getAmountProductOnDatabase())
+	require.Equal(t, 2, getAmountProductOnDatabase())
 
+	product.Name = "Mudou"
+	product.Price = 12
+	_, err = productDb.Save(product)
+	require.Nil(t, err)
+	require.Equal(t, 2, getAmountProductOnDatabase())
+
+	productFound, err := productDb.Get(product.GetID())
+	require.Nil(t, err)
+	require.Equal(t, "Mudou", productFound.GetName())
+	require.Equal(t, 12.0, productFound.GetPrice())
 }
 
 func getAmountProductOnDatabase() int {
@@ -85,11 +96,13 @@ func getAmountProductOnDatabase() int {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	result, err := stmt.Query()
+
+	result := stmt.QueryRow()
+	var count int
+	err = result.Scan(&count)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	var count int
-	result.Scan(&count)
+
 	return count
 }

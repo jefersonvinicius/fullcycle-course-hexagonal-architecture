@@ -2,7 +2,6 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	"github.com/jefersonvinicius/fullcycle-course-hexagonal-architecture/products-application/application"
@@ -48,12 +47,12 @@ func (p *ProductDB) Save(product application.ProductInterface) (application.Prod
 		return product, nil
 
 	} else {
-		stmt, err := p.db.Prepare("insert into products values(?, ?, ?, ?)")
+		stmt, err := p.db.Prepare("insert into products (id, name, price, status) values (?, ?, ?, ?)")
 		if err != nil {
 			return nil, err
 		}
 
-		_, err = stmt.Exec(product.GetName(), product.GetPrice(), product.GetStatus(), product.GetID())
+		_, err = stmt.Exec(product.GetID(), product.GetName(), product.GetPrice(), product.GetStatus())
 		if err != nil {
 			return nil, err
 		}
@@ -62,13 +61,15 @@ func (p *ProductDB) Save(product application.ProductInterface) (application.Prod
 	}
 }
 
-func productAlreadyExists(id string, p *ProductDB) bool {
-	stmt, err := p.db.Prepare("select * from products where id = ?")
+func productAlreadyExists(id string, productDB *ProductDB) bool {
+	stmt, err := productDB.db.Prepare("select count(*) as count from products where id = ?")
 	checkError(err)
-	rows, err := stmt.Query(id)
+
+	var count int
+	err = stmt.QueryRow(id).Scan(&count)
 	checkError(err)
-	fmt.Println(rows.Next())
-	return false
+
+	return count == 1
 }
 
 func checkError(err error) {
