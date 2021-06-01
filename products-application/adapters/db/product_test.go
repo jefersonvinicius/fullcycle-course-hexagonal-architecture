@@ -14,9 +14,6 @@ var Db *sql.DB
 
 func setUp() {
 	Db, _ = sql.Open("sqlite3", ":memory:")
-	// if err != nil {
-	// 	log.Fatal(err.Error())
-	// }
 	createTable(Db)
 	createProduct(Db)
 }
