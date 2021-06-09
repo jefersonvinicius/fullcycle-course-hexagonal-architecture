@@ -8,6 +8,9 @@ github.com/fsnotify/fsnotify
 # github.com/golang/mock v1.5.0
 ## explicit
 github.com/golang/mock/gomock
+# github.com/gorilla/mux v1.8.0
+## explicit
+github.com/gorilla/mux
 # github.com/hashicorp/hcl v1.0.0
 github.com/hashicorp/hcl
 github.com/hashicorp/hcl/hcl/ast
@@ -59,6 +62,9 @@ github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
 # github.com/subosito/gotenv v1.2.0
 github.com/subosito/gotenv
+# github.com/urfave/negroni v1.0.0
+## explicit
+github.com/urfave/negroni
 # golang.org/x/sys v0.0.0-20190624142023-c5567b49c5d0
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.2
