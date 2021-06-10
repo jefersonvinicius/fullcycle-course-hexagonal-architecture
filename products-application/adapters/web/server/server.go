@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/jefersonvinicius/fullcycle-course-hexagonal-architecture/products-application/adapters/web/handlers"
 	"github.com/jefersonvinicius/fullcycle-course-hexagonal-architecture/products-application/application"
 	"github.com/urfave/negroni"
 )
@@ -26,10 +27,13 @@ func (w WebServer) Serve() {
 		negroni.NewLogger(),
 	)
 
+	handlers.MakeProductHandlers(router, middlewares, w.Service)
+	http.Handle("/", router)
+
 	server := http.Server{
 		ReadHeaderTimeout: 10 * time.Second,
 		WriteTimeout:      10 * time.Second,
-		Addr:              ":8080",
+		Addr:              ":9000",
 		Handler:           http.DefaultServeMux,
 		ErrorLog:          log.New(os.Stderr, "log: ", log.Lshortfile),
 	}
